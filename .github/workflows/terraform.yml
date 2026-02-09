@@ -78,6 +78,11 @@ jobs:
               if: steps.apple.outcome == 'success'
               run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER }} 
 
+            - name: Verify cluster access
+              run: |
+               kubectl config current-context
+               kubectl get nodes
+
             - name: Install Ingress controller
               if: steps.apple.outcome == 'success' && steps.getconfig.outcome == 'success'
               run: kubectl apply --validate=false -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
